@@ -1,121 +1,94 @@
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.control.Label?>
+<?xml version="1.0" encoding="UTF-8"?>
+
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.text.Font?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.TextField?>
-<GridPane fx:controller="Controllers.PartController"
-          xmlns:fx="http://javafx.com/fxml" alignment="center" hgap="10" vgap="10">
-    <padding><Insets top="40" right="40" bottom="40" left="40"/></padding>
-    <columnConstraints>
-        <ColumnConstraints minWidth="100" prefWidth="100"
-                           maxWidth="300" halignment="RIGHT">
-        </ColumnConstraints>
-        <ColumnConstraints minWidth="200" prefWidth="200"
-                           maxWidth="300" hgrow="ALWAYS">
-        </ColumnConstraints>
-    </columnConstraints>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.text.Font?>
 
-    <Label text="Form (FXML)" GridPane.columnIndex="0"
-           GridPane.rowIndex="0" GridPane.columnSpan="2"
-           GridPane.rowSpan="1" GridPane.halignment="CENTER" >
-        <font>
-            <Font name="Arial" size="24" ></Font>
-        </font>
-        <GridPane.margin>
-            <Insets top="20" right="0" bottom="20" left="0"></Insets>
-        </GridPane.margin>
-    </Label>
-
-
-    <Label text="Full Name : " GridPane.columnIndex="0"
-           GridPane.rowIndex="1" >
-    </Label>
-    <!-- Add Name Text Field -->
-    <TextField fx:id="nameField" prefHeight="40"
-               GridPane.columnIndex="1" GridPane.rowIndex="1"/>
-
-
-    <!-- Add Email Label -->
-    <Label text="Email ID : " GridPane.columnIndex="0"
-           GridPane.rowIndex="2" >
-    </Label>
-    <!-- Add Email Text Field -->
-    <TextField fx:id="emailField" prefHeight="40"
-               GridPane.columnIndex="1" GridPane.rowIndex="2"/>
-
-
-
-    <!-- Add Password Label -->
-    <Label text="Password : " GridPane.columnIndex="0"
-           GridPane.rowIndex="3" >
-    </Label>
-    <!-- Add Password Field -->
-    <PasswordField fx:id="passwordField" prefHeight="40"
-                   GridPane.columnIndex="1" GridPane.rowIndex="3"/>
-
-
-    <!-- Add Submit Button -->
-    <Button fx:id="submitButton" text="Submit"
-            prefWidth="100" prefHeight="40" defaultButton="true"
-            GridPane.columnIndex="0" GridPane.rowIndex="4"
-            GridPane.columnSpan="2" GridPane.rowSpan="1"
-            GridPane.halignment="CENTER" >
-
-        <GridPane.margin>
-            <Insets top="20" right="0" bottom="20" left="0"></Insets>
-        </GridPane.margin>
-    </Button>
-
-    <columnConstraints>
-        <ColumnConstraints minWidth="100" prefWidth="100"
-                           maxWidth="300" halignment="RIGHT">
-        </ColumnConstraints>
-        <ColumnConstraints minWidth="200" prefWidth="200"
-                           maxWidth="300" hgrow="ALWAYS">
-        </ColumnConstraints>
-    </columnConstraints>
-
-    <Label text="Full Name : " GridPane.columnIndex="2"
-           GridPane.rowIndex="1" >
-    </Label>
-    <!-- Add Name Text Field -->
-    <TextField fx:id="nameField2" prefHeight="40"
-               GridPane.columnIndex="3" GridPane.rowIndex="1"/>
-
-
-    <!-- Add Email Label -->
-    <Label text="Email ID : " GridPane.columnIndex="2"
-           GridPane.rowIndex="2" >
-    </Label>
-    <!-- Add Email Text Field -->
-    <TextField fx:id="emailField2" prefHeight="40"
-               GridPane.columnIndex="3" GridPane.rowIndex="2"/>
-
-
-
-    <!-- Add Password Label -->
-    <Label text="Password : " GridPane.columnIndex="2"
-           GridPane.rowIndex="3" >
-    </Label>
-    <!-- Add Password Field -->
-    <PasswordField fx:id="passwordField2" prefHeight="40"
-                   GridPane.columnIndex="3" GridPane.rowIndex="3"/>
-
-
-    <!-- Add Submit Button -->
-    <Button fx:id="submitButton2" text="Submit"
-            prefWidth="100" prefHeight="40" defaultButton="true"
-            GridPane.columnIndex="2" GridPane.rowIndex="4"
-            GridPane.columnSpan="2" GridPane.rowSpan="1"
-            GridPane.halignment="CENTER" >
-
-        <GridPane.margin>
-            <Insets top="20" right="0" bottom="20" left="0"></Insets>
-        </GridPane.margin>
-    </Button>
-
+<GridPane fx:controller="Controllers.PartController" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/15.0.1">
+  <columnConstraints>
+    <ColumnConstraints hgrow="SOMETIMES" maxWidth="369.0" minWidth="10.0" prefWidth="317.0" />
+    <ColumnConstraints hgrow="SOMETIMES" maxWidth="295.0" minWidth="10.0" prefWidth="283.0" />
+  </columnConstraints>
+  <rowConstraints>
+    <RowConstraints maxHeight="130.0" minHeight="5.0" prefHeight="72.0" vgrow="SOMETIMES" />
+    <RowConstraints maxHeight="287.0" minHeight="10.0" prefHeight="234.0" vgrow="SOMETIMES" />
+    <RowConstraints maxHeight="94.0" minHeight="10.0" prefHeight="93.0" vgrow="SOMETIMES" />
+  </rowConstraints>
+   <children>
+      <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="20.0">
+         <children>
+            <Label text="Add Part">
+               <font>
+                  <Font name="System Bold" size="13.0" />
+               </font>
+            </Label>
+            <RadioButton mnemonicParsing="false" onMouseClicked="#updateToInHouse" selected="true" text="In-House">
+               <toggleGroup>
+                  <ToggleGroup fx:id="part" />
+               </toggleGroup>
+            </RadioButton>
+            <RadioButton mnemonicParsing="false" onMouseClicked="#updateToOutsourced" text="Outsourced" toggleGroup="$part" />
+         </children>
+      </HBox>
+      <GridPane alignment="CENTER" GridPane.rowIndex="1">
+        <columnConstraints>
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="168.0" minWidth="10.0" prefWidth="64.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="222.0" minWidth="10.0" prefWidth="126.0" />
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="165.0" minWidth="10.0" prefWidth="133.0" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints maxHeight="73.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints maxHeight="139.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints maxHeight="146.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="146.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="146.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="146.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="146.0" minHeight="10.0" prefHeight="63.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <Label alignment="CENTER" contentDisplay="CENTER" text="ID" GridPane.columnIndex="1" />
+            <Label text="Name" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <Label text="Inv" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <Label text="Price/Cost" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+            <Label text="Max" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+            <Label fx:id="additional_part_label" text="Machine ID" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+            <TextField editable="false" promptText="Auto Gen  - Disabled" GridPane.columnIndex="2" />
+            <TextField fx:id="name_field" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+            <TextField fx:id="inv_field" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+            <TextField fx:id="price_field" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+            <TextField fx:id="max_field" GridPane.columnIndex="2" GridPane.rowIndex="4" />
+            <TextField fx:id="additional_part_field" GridPane.columnIndex="2" GridPane.rowIndex="5" />
+         </children>
+      </GridPane>
+      <GridPane GridPane.columnIndex="1" GridPane.rowIndex="1">
+        <columnConstraints>
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="90.0" minWidth="10.0" prefWidth="30.0" />
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="162.0" minWidth="10.0" prefWidth="68.0" />
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="197.0" minWidth="10.0" prefWidth="133.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="197.0" minWidth="10.0" prefWidth="62.0" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints maxHeight="117.0" minHeight="10.0" prefHeight="117.0" vgrow="SOMETIMES" />
+          <RowConstraints maxHeight="74.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints maxHeight="95.0" minHeight="10.0" prefHeight="93.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <Label text="Min" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <TextField fx:id="min_field" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+         </children>
+      </GridPane>
+      <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="25.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+         <children>
+            <Button mnemonicParsing="false" text="Save" />
+            <Button mnemonicParsing="false" text="Cancel" />
+         </children>
+      </HBox>
+   </children>
 </GridPane>
