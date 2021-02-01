@@ -57,13 +57,9 @@ public class Inventory extends Application {
     //+ deleteProduct(selectedProduct:Product):boolean
 
     public static int getID(boolean isPart) {
-        if(isPart){
-            partID++;
-            return partID;
-        }
-        productID++;
-        return productID;
+        return isPart ? partID++ : productID++;
     }
+
     public static void main(String[] args) {
         launch(args);
     }
