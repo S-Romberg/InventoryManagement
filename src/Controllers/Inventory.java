@@ -18,13 +18,7 @@ public class Inventory extends Application {
     private static ObservableList<Product> allProducts = FXCollections.observableArrayList();
     private static int partID = 0;
     private static int productID = 0;
-    public Inventory(ObservableList<Part> allParts, ObservableList<Product> allProducts) {
-        this.allParts = allParts;
-        this.allProducts = allProducts;
-    }
-    public Inventory() {
-    }
-
+    public Inventory() {}
 
     @Override
     public void start(Stage mainStage) throws Exception{
@@ -36,18 +30,16 @@ public class Inventory extends Application {
     }
 
     public static void printList(){
-        allParts.forEach((part) -> {
-            System.out.println("Name:  " + part.getName());
-        });
+        allParts.forEach((part) -> System.out.println("Name:  " + part.getName()));
     }
 
     public static void addPart(Part newPart){
         allParts.add(newPart);
-    };
+    }
 
-    public void addProduct(Product newProduct){
+    public static void addProduct(Product newProduct){
         allProducts.add(newProduct);
-    };
+    }
     //+ lookupPart(partId:int):Parts
     //+ lookupProduct(productId:int):Product
     //+ lookupPart(partName:String):ObservableList<Part>
@@ -71,39 +63,39 @@ public class Inventory extends Application {
         return allProducts;
     }
 
-    public void addPart(MouseEvent mouseEvent) throws Exception {
+    public void addPart() throws Exception {
         Parent addPartPage = FXMLLoader.load(getClass().getResource("../Views/add_part.fxml"));
         Stage stage = new Stage();
         stage.setScene(new Scene(addPartPage));
         stage.show();
     }
 
-    public void modifyPart(MouseEvent mouseEvent) throws Exception {
+    public void modifyPart() throws Exception {
         Parent addPartPage = FXMLLoader.load(getClass().getResource("../Views/modify_part.fxml"));
         Stage stage = new Stage();
         stage.setScene(new Scene(addPartPage));
         stage.show();
     }
 
-    public void deletePart(MouseEvent mouseEvent) {
-        System.out.println(mouseEvent);
+    public void deletePart() {
+        System.out.println("delete");
     }
-    public void addProduct(MouseEvent mouseEvent) throws Exception {
+    public void addProduct() throws Exception {
         Parent addPartPage = FXMLLoader.load(getClass().getResource("../Views/add_product.fxml"));
         Stage stage = new Stage();
         stage.setScene(new Scene(addPartPage));
         stage.show();
     }
-    public void modifyProduct(MouseEvent mouseEvent) throws Exception {
+    public void modifyProduct() throws Exception {
         Parent addPartPage = FXMLLoader.load(getClass().getResource("../Views/modify_product.fxml"));
         Stage stage = new Stage();
         stage.setScene(new Scene(addPartPage));
         stage.show();
     }
-    public void deleteProduct(MouseEvent mouseEvent) {
-        System.out.println(mouseEvent);
+    public void deleteProduct() {
+        System.out.println("delete");
     }
-    public void exitApplication(MouseEvent mouseEvent) {
-        System.out.println(mouseEvent);
+    public void exitApplication() {
+        System.out.println("exit");
     }
 }
