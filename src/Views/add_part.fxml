@@ -86,7 +86,7 @@
       </GridPane>
       <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="25.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
          <children>
-            <Button mnemonicParsing="false" text="Save" />
+            <Button mnemonicParsing="false" onMouseClicked="#addPart" text="Save" />
             <Button mnemonicParsing="false" text="Cancel" />
          </children>
       </HBox>

@@ -1,20 +1,12 @@
 package Controllers;
 
-import Models.Inhouse;
+import Models.InhousePart;
 import Models.Outsourced;
 import Models.Part;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.stage.Stage;
-
-import java.awt.event.MouseEvent;
-import java.io.IOError;
-import java.io.IOException;
 
 public class PartController {
     @FXML
@@ -31,7 +23,8 @@ public class PartController {
     private TextField max_field;
     @FXML
     private TextField min_field;
-    private boolean inHouse;
+
+    private boolean inHouse = true;
     private Part newPart;
 
     public void updateToInHouse(javafx.scene.input.MouseEvent event) throws Exception {
@@ -43,13 +36,57 @@ public class PartController {
         additional_part_label.setText("Company Name");
     }
 
-    public void addPart() throws Exception {
-        // instantiate new classes, grab values from fields first and apply to whichever condition is true
-        if (inHouse) {
-            newPart = new Inhouse();
-        } else {
-            newPart = new Outsourced();
+    public void addPart() {
+        if (emptyFormFields()) { throwAlert("Form Error", "Fill out all required fields"); return; }
+        try {
+            int id = Inventory.getID(true);
+            String name = name_field.getText();
+            double price = Double.parseDouble(price_field.getText());
+            int stock = Integer.parseInt(inv_field.getText());
+            int min = Integer.parseInt(min_field.getText());
+            int max = Integer.parseInt(max_field.getText());
+            String inStockErrors = validStockNumber(stock, min, max);
+            if (!inStockErrors.equals("")) {throwAlert("In Stock Error", inStockErrors); return; }
+            String additionalField = additional_part_field.getText();
+            if (inHouse) {
+                int machineId = Integer.parseInt(additionalField);
+                newPart = new InhousePart(id, name, price, stock, min, max, machineId);
+                Inventory.addPart(newPart);
+            } else {
+                newPart = new Outsourced(id, name, price, stock, min, max, additionalField);
+            }
+        }
+        catch (NumberFormatException e){
+            throwAlert("Error adding part", "Entered invalid number");
+        } catch (Exception e){
+            throwAlert("Error adding part", e.getLocalizedMessage());
         }
     }
 
+    public static void throwAlert(String mainText, String detail) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(mainText);
+        alert.setHeaderText("Error");
+        alert.setContentText(detail);
+        alert.showAndWait();
+    }
+
+    public static String validStockNumber(int stock, int min, int max) {
+        if (min > max) {
+            return "Min cannot be greater than max";
+        } else if (stock > max) {
+            return "Inventory cannot be greater than max";
+        } else if (stock < min){
+            return "Inventory cannot be less than min";
+        }   return "";
+    }
+
+    private boolean emptyFormFields(){
+        String name = name_field.getText();
+        String price = price_field.getText();
+        String stock = inv_field.getText();
+        String min = min_field.getText();
+        String max = max_field.getText();
+        return (name.equals("") && price.equals("") && stock.equals("") && min.equals("") && max.equals(""));
+    }
 }
