@@ -65,10 +65,10 @@ public class Inventory extends Application {
     }
 
     public  ObservableList<Part> getAllParts(){
-        return this.allParts;
+        return allParts;
     }
     public ObservableList<Product> getAllProducts(){
-        return this.allProducts;
+        return allProducts;
     }
 
     public void addPart(MouseEvent mouseEvent) throws Exception {

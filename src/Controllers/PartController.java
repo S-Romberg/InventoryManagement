@@ -45,16 +45,16 @@ public class PartController {
             int stock = Integer.parseInt(inv_field.getText());
             int min = Integer.parseInt(min_field.getText());
             int max = Integer.parseInt(max_field.getText());
+            String additionalField = additional_part_field.getText();
             String inStockErrors = validStockNumber(stock, min, max);
             if (!inStockErrors.equals("")) {throwAlert("In Stock Error", inStockErrors); return; }
-            String additionalField = additional_part_field.getText();
             if (inHouse) {
                 int machineId = Integer.parseInt(additionalField);
                 newPart = new InhousePart(id, name, price, stock, min, max, machineId);
-                Inventory.addPart(newPart);
             } else {
                 newPart = new Outsourced(id, name, price, stock, min, max, additionalField);
             }
+            Inventory.addPart(newPart);
         }
         catch (NumberFormatException e){
             throwAlert("Error adding part", "Entered invalid number");
