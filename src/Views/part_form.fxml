@@ -24,7 +24,7 @@
    <children>
       <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="20.0">
          <children>
-            <Label text="Add Part">
+            <Label fx:id="main_label" text="Add Part">
                <font>
                   <Font name="System Bold" size="13.0" />
                </font>
@@ -86,7 +86,7 @@
       </GridPane>
       <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="25.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
          <children>
-            <Button mnemonicParsing="false" onMouseClicked="#addPart" text="Save" />
+            <Button fx:id="save_button" mnemonicParsing="false" onMouseClicked="#addPart" text="Save" />
             <Button mnemonicParsing="false" onMouseClicked="#close" text="Cancel" />
          </children>
       </HBox>

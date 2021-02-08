@@ -15,13 +15,17 @@ import javafx.stage.Stage;
 public class Inventory extends Application {
 
 
-    private static ObservableList<Part> allParts = FXCollections.observableArrayList();
-    private static ObservableList<Product> allProducts = FXCollections.observableArrayList();
+    public static ObservableList<Part> allParts = FXCollections.observableArrayList();
+    public static ObservableList<Product> allProducts = FXCollections.observableArrayList();
     private static int partID = 0;
     private static int productID = 0;
     @FXML
     private TableView<Part> part_table;
     public Inventory() {}
+
+    public void initialize () {
+        part_table.setItems(allParts);
+    }
 
     @Override
     public void start(Stage mainStage) throws Exception{
@@ -43,7 +47,15 @@ public class Inventory extends Application {
     public static void addProduct(Product newProduct){
         allProducts.add(newProduct);
     }
-    //+ lookupPart(partId:int):Parts
+
+    public static Part lookupPart(int partId) {
+        for (Part part : getAllParts()) {
+            if (part.getId() == partId) {
+                return part;
+            }
+        }
+        return null;
+    }
     //+ lookupProduct(productId:int):Product
     //+ lookupPart(partName:String):ObservableList<Part>
     //+ lookupProduct(productName:String):ObservableList<Product> + updatePart(index:int, selectedPart:Part):void
@@ -59,10 +71,10 @@ public class Inventory extends Application {
         launch(args);
     }
 
-    public  ObservableList<Part> getAllParts(){
+    public static ObservableList<Part> getAllParts(){
         return allParts;
     }
-    public ObservableList<Product> getAllProducts(){
+    public static ObservableList<Product> getAllProducts(){
         return allProducts;
     }
 
@@ -78,6 +90,7 @@ public class Inventory extends Application {
         PartController.setSelectedPart(part);
         Parent addPartPage = FXMLLoader.load(getClass().getResource("../Views/part_form.fxml"));
         Stage stage = new Stage();
+        System.out.println("Modify Part");
         System.out.println(part);
         stage.setScene(new Scene(addPartPage));
         stage.show();
