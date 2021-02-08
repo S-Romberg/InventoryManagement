@@ -5,10 +5,11 @@ import Models.Product;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.input.MouseEvent;
+import javafx.scene.control.TableView;
 import javafx.stage.Stage;
 
 public class Inventory extends Application {
@@ -18,6 +19,8 @@ public class Inventory extends Application {
     private static ObservableList<Product> allProducts = FXCollections.observableArrayList();
     private static int partID = 0;
     private static int productID = 0;
+    @FXML
+    private TableView<Part> part_table;
     public Inventory() {}
 
     @Override
@@ -64,15 +67,18 @@ public class Inventory extends Application {
     }
 
     public void addPart() throws Exception {
-        Parent addPartPage = FXMLLoader.load(getClass().getResource("../Views/add_part.fxml"));
+        Parent addPartPage = FXMLLoader.load(getClass().getResource("../Views/part_form.fxml"));
         Stage stage = new Stage();
         stage.setScene(new Scene(addPartPage));
         stage.show();
     }
 
     public void modifyPart() throws Exception {
-        Parent addPartPage = FXMLLoader.load(getClass().getResource("../Views/modify_part.fxml"));
+        Part part = part_table.getSelectionModel().getSelectedItem();
+        PartController.setSelectedPart(part);
+        Parent addPartPage = FXMLLoader.load(getClass().getResource("../Views/part_form.fxml"));
         Stage stage = new Stage();
+        System.out.println(part);
         stage.setScene(new Scene(addPartPage));
         stage.show();
     }

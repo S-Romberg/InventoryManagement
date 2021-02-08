@@ -59,7 +59,7 @@
             <Label text="Price/Cost" GridPane.columnIndex="1" GridPane.rowIndex="3" />
             <Label text="Max" GridPane.columnIndex="1" GridPane.rowIndex="4" />
             <Label fx:id="additional_part_label" text="Machine ID" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-            <TextField editable="false" promptText="Auto Gen  - Disabled" GridPane.columnIndex="2" />
+            <TextField editable="false" disable="true"  promptText="Auto Gen  - Disabled" GridPane.columnIndex="2" />
             <TextField fx:id="name_field" GridPane.columnIndex="2" GridPane.rowIndex="1" />
             <TextField fx:id="inv_field" GridPane.columnIndex="2" GridPane.rowIndex="2" />
             <TextField fx:id="price_field" GridPane.columnIndex="2" GridPane.rowIndex="3" />
@@ -87,7 +87,7 @@
       <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="25.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
          <children>
             <Button mnemonicParsing="false" onMouseClicked="#addPart" text="Save" />
-            <Button mnemonicParsing="false" text="Cancel" />
+            <Button mnemonicParsing="false" onMouseClicked="#close" text="Cancel" />
          </children>
       </HBox>
    </children>
