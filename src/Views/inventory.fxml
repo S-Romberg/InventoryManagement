@@ -43,7 +43,7 @@
           <RowConstraints maxHeight="38.0" minHeight="8.0" prefHeight="38.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <TableView items="${controller.allParts}" prefHeight="119.0" prefWidth="279.0" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1">
+            <TableView fx:id="part_table" items="${controller.allParts}" prefHeight="119.0" prefWidth="279.0" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1">
                 <columns>
                   <TableColumn prefWidth="60.0" text="Part ID">
                       <cellValueFactory><PropertyValueFactory property="id" /></cellValueFactory>
