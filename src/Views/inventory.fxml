@@ -59,7 +59,7 @@
                   </TableColumn>
               </columns>
             </TableView>
-            <TextField promptText="Search by Part ID or Name" GridPane.columnIndex="2" />
+            <TextField fx:id="search_part" promptText="Search by Part ID or Name" GridPane.columnIndex="2"  />
             <Label text="Parts" GridPane.columnIndex="1">
                <font>
                   <Font name="System Bold" size="13.0" />
@@ -90,7 +90,7 @@
           <RowConstraints maxHeight="39.0" minHeight="10.0" prefHeight="37.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <TableView items="${allProducts}" prefHeight="118.0" prefWidth="296.0" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1">
+            <TableView fx:id="product_table" prefHeight="118.0" prefWidth="296.0" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1">
                <columns>
                   <TableColumn prefWidth="66.0" text="Product ID" />
                   <TableColumn prefWidth="86.0" text="Product Name" />
@@ -98,7 +98,7 @@
                   <TableColumn prefWidth="118.0" text="Price/Cost Per Unit" />
                </columns>
             </TableView>
-            <TextField prefHeight="27.0" prefWidth="142.0" promptText="Search by Product ID or Name" GridPane.columnIndex="2" />
+            <TextField fx:id="search_product" prefHeight="27.0" prefWidth="142.0" promptText="Search by Product ID or Name" GridPane.columnIndex="2" />
             <Label text="Products" GridPane.columnIndex="1">
                <font>
                   <Font name="System Font" size="13.0" />

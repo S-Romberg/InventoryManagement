@@ -49,10 +49,8 @@ public class PartController {
             max_field.setText(Integer.toString(selectedPart.getMax()));
             price_field.setText(Double.toString(selectedPart.getPrice()));
             if (selectedPart instanceof InHouse){
-                System.out.println(((InHouse) selectedPart).getMachineId());
                 additional_part_field.setText(String.valueOf(((InHouse) selectedPart).getMachineId()));
             } else {
-                System.out.println(((Outsourced) selectedPart).getCompanyName());
                 additional_part_field.setText(((Outsourced) selectedPart).getCompanyName());
                 inHouse = false;
                 outsourced.setSelected(true);
@@ -72,6 +70,7 @@ public class PartController {
         }
     };
 
+
     public void updateToInHouse() {
         inHouse = true;
         additional_part_label.setText("Machine ID");
@@ -87,6 +86,9 @@ public class PartController {
         stage.close();
     }
 
+    /**
+     * @param part the selected part in part table
+     */
     public static void setSelectedPart(Part part){
         selectedPart = part;
     }
@@ -101,10 +103,9 @@ public class PartController {
         String inStockErrors = validStockNumber(stock, min, max);
         if (!inStockErrors.equals("")) {throwAlert("In Stock Error", inStockErrors); return; }
         int machineId = Integer.parseInt(additionalField);
-        Part modifiedPart = Inventory.lookupPart(selectedPart.getId());
-        if (modifiedPart != null) {
-            Inventory.updatePart(modifiedPart, max, min, price, stock, name, additionalField);
-        }
+        boolean inHouse = selectedPart instanceof InHouse;
+        int index = Inventory.getAllParts().indexOf(selectedPart);
+        Inventory.updatePart(index, inHouse, selectedPart.getId(), max, min, price, stock, name, additionalField);
         close();
     }
 
@@ -136,6 +137,10 @@ public class PartController {
         }
     }
 
+    /**
+     * @param mainText Main text to display in alert
+     * @param detail Detail text to display in alert
+     */
     public static void throwAlert(String mainText, String detail) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle(mainText);
@@ -144,6 +149,11 @@ public class PartController {
         alert.showAndWait();
     }
 
+    /**
+     * @param stock Stock number from form
+     * @param min Min number from form
+     * @param max Max number from form
+     */
     public static String validStockNumber(int stock, int min, int max) {
         if (min > max) {
             return "Min cannot be greater than max";
@@ -154,6 +164,9 @@ public class PartController {
         }   return "";
     }
 
+    /**
+     * @return True if there are fields left empty, false if all fields have been filled
+     */
     private boolean emptyFormFields(){
         String name = name_field.getText();
         String price = price_field.getText();

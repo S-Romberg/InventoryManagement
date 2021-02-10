@@ -19,6 +19,8 @@ public class Product {
         this.min = min;
         this.max = max;
     }
+
+
     /**
      * @return the id
      */
@@ -103,4 +105,24 @@ public class Product {
         this.max = max;
     }
 
+    /**
+     * @param part the associated part to add
+     */
+    public void addAssociatedPart(Part part){
+        associatedParts.add(part);
+    }
+
+    /**
+     * @param selectedAssociatedPart the associated part to delete
+     */
+    public boolean deleteAssociatedPart(Part selectedAssociatedPart) {
+        return true;
+    }
+
+    /**
+     * @return the associated parts
+     */
+    public ObservableList<Part> getAllAssociatedParts(){
+        return associatedParts;
+    }
 }
