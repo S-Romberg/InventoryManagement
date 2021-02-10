@@ -1,7 +1,9 @@
 package Models;
 
+import javafx.collections.ObservableList;
+
 public class Product {
-    //  private ObservableList<Part> associatedParts;
+    private ObservableList<Part> associatedParts;
     private int id;
     private String name;
     private double price;

@@ -29,12 +29,12 @@
                   <Font name="System Bold" size="13.0" />
                </font>
             </Label>
-            <RadioButton mnemonicParsing="false" onMouseClicked="#updateToInHouse" selected="true" text="In-House">
+            <RadioButton fx:id="inhouse" mnemonicParsing="false" onMouseClicked="#updateToInHouse" selected="true" text="In-House">
                <toggleGroup>
                   <ToggleGroup fx:id="part" />
                </toggleGroup>
             </RadioButton>
-            <RadioButton mnemonicParsing="false" onMouseClicked="#updateToOutsourced" text="Outsourced" toggleGroup="$part" />
+            <RadioButton fx:id="outsourced" mnemonicParsing="false" onMouseClicked="#updateToOutsourced" text="Outsourced" toggleGroup="$part" />
          </children>
       </HBox>
       <GridPane alignment="CENTER" GridPane.rowIndex="1">

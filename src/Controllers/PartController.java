@@ -1,14 +1,10 @@
 package Controllers;
 
-import Models.InhousePart;
+import Models.InHouse;
 import Models.Outsourced;
 import Models.Part;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
 
 public class PartController {
@@ -30,6 +26,10 @@ public class PartController {
     private TextField min_field;
     @FXML
     private Button save_button;
+    @FXML
+    private RadioButton outsourced;
+    @FXML
+    private RadioButton inhouse;
 
     String name;
     double price;
@@ -40,7 +40,6 @@ public class PartController {
 
     private boolean inHouse = true;
     private static Part selectedPart;
-    private Part newPart;
 
     public void initialize() {
         if(selectedPart != null) {
@@ -49,20 +48,36 @@ public class PartController {
             min_field.setText(Integer.toString(selectedPart.getMin()));
             max_field.setText(Integer.toString(selectedPart.getMax()));
             price_field.setText(Double.toString(selectedPart.getPrice()));
+            if (selectedPart instanceof InHouse){
+                System.out.println(((InHouse) selectedPart).getMachineId());
+                additional_part_field.setText(String.valueOf(((InHouse) selectedPart).getMachineId()));
+            } else {
+                System.out.println(((Outsourced) selectedPart).getCompanyName());
+                additional_part_field.setText(((Outsourced) selectedPart).getCompanyName());
+                inHouse = false;
+                outsourced.setSelected(true);
+                updateToOutsourced();
+            }
             main_label.setText("Modify Part");
             save_button.setOnMouseClicked(e -> modifyPart());
         } else {
+            name_field.clear();
+            inv_field.clear();
+            min_field.clear();
+            max_field.clear();
+            price_field.clear();
+            additional_part_field.clear();
             main_label.setText("Add Part");
             Inventory.printList();
         }
     };
 
-    public void updateToInHouse(javafx.scene.input.MouseEvent event) throws Exception {
+    public void updateToInHouse() {
         inHouse = true;
         additional_part_label.setText("Machine ID");
     }
 
-    public void updateToOutsourced(javafx.scene.input.MouseEvent event) throws Exception {
+    public void updateToOutsourced() {
         inHouse = false;
         additional_part_label.setText("Company Name");
     }
@@ -85,16 +100,16 @@ public class PartController {
         additionalField = additional_part_field.getText();
         String inStockErrors = validStockNumber(stock, min, max);
         if (!inStockErrors.equals("")) {throwAlert("In Stock Error", inStockErrors); return; }
-        if (inHouse) {
-            int machineId = Integer.parseInt(additionalField);
-            Part modifiedPart = Inventory.lookupPart(selectedPart.getId());
-
-        } else {
-            System.out.println("else");
+        int machineId = Integer.parseInt(additionalField);
+        Part modifiedPart = Inventory.lookupPart(selectedPart.getId());
+        if (modifiedPart != null) {
+            Inventory.updatePart(modifiedPart, max, min, price, stock, name, additionalField);
         }
+        close();
     }
 
     public void addPart() {
+        Part newPart;
         if (emptyFormFields()) { throwAlert("Form Error", "Fill out all required fields"); return; }
         try {
             name = name_field.getText();
@@ -108,14 +123,13 @@ public class PartController {
             if (!inStockErrors.equals("")) {throwAlert("In Stock Error", inStockErrors); return; }
             if (inHouse) {
                 int machineId = Integer.parseInt(additionalField);
-                newPart = new InhousePart(id, name, price, stock, min, max, machineId);
+                newPart = new InHouse(id, name, price, stock, min, max, machineId);
             } else {
                 newPart = new Outsourced(id, name, price, stock, min, max, additionalField);
             }
             Inventory.addPart(newPart);
             close();
-        }
-        catch (NumberFormatException e){
+        } catch (NumberFormatException e){
             throwAlert("Error adding part", "Entered invalid number");
         } catch (Exception e){
             throwAlert("Error adding part", e.getLocalizedMessage());
@@ -148,4 +162,5 @@ public class PartController {
         String max = max_field.getText();
         return (name.equals("") && price.equals("") && stock.equals("") && min.equals("") && max.equals(""));
     }
+
 }
