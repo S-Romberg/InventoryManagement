@@ -92,10 +92,18 @@
          <children>
             <TableView fx:id="product_table" prefHeight="118.0" prefWidth="296.0" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1">
                <columns>
-                  <TableColumn prefWidth="66.0" text="Product ID" />
-                  <TableColumn prefWidth="86.0" text="Product Name" />
-                  <TableColumn prefWidth="93.0" text="Inventory Level" />
-                  <TableColumn prefWidth="118.0" text="Price/Cost Per Unit" />
+                   <TableColumn prefWidth="66.0" text="Product ID" >
+                       <cellValueFactory><PropertyValueFactory property="id" /></cellValueFactory>
+                   </TableColumn>
+                   <TableColumn prefWidth="86.0" text="Product Name" >
+                       <cellValueFactory><PropertyValueFactory property="name" /></cellValueFactory>
+                   </TableColumn>
+                   <TableColumn prefWidth="93.0" text="Inventory Level" >
+                       <cellValueFactory><PropertyValueFactory property="stock" /></cellValueFactory>
+                   </TableColumn>
+                   <TableColumn prefWidth="118.0" text="Price/Cost Per Unit" >
+                       <cellValueFactory><PropertyValueFactory property="price" /></cellValueFactory>
+                   </TableColumn>
                </columns>
             </TableView>
             <TextField fx:id="search_product" prefHeight="27.0" prefWidth="142.0" promptText="Search by Product ID or Name" GridPane.columnIndex="2" />

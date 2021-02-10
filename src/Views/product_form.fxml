@@ -13,8 +13,9 @@
 <?import javafx.scene.layout.VBox?>
 
 
+<?import javafx.scene.control.cell.PropertyValueFactory?>
 <HBox fx:controller="Controllers.ProductController" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
-      minWidth="-Infinity" prefHeight="500.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/15.0.1"  xmlns:fx="http://javafx.com/fxml/1">
+      minWidth="-Infinity" prefHeight="500.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1">
     <GridPane prefHeight="500.0" prefWidth="320.0">
         <columnConstraints>
             <ColumnConstraints hgrow="SOMETIMES" maxWidth="198.5040740966797" minWidth="10.0"
@@ -42,16 +43,16 @@
         </VBox>
         <VBox prefHeight="267.0" prefWidth="200.0" spacing="12.0" GridPane.columnIndex="2" GridPane.rowIndex="1">
             <TextField disable="true" maxWidth="130.0" minWidth="130.0" text="Auto Gen - Disabled"/>
-            <TextField maxWidth="130.0" minWidth="130.0"/>
-            <TextField maxHeight="0.0" maxWidth="80.0" minWidth="80.0"/>
-            <TextField maxWidth="80.0" prefHeight="27.0" prefWidth="80.0"/>
+            <TextField fx:id="name_field" maxWidth="130.0" minWidth="130.0"/>
+            <TextField fx:id="inv_field" maxHeight="0.0" maxWidth="80.0" minWidth="80.0"/>
+            <TextField fx:id="price_field" maxWidth="80.0" prefHeight="27.0" prefWidth="80.0"/>
             <HBox alignment="CENTER_LEFT" prefHeight="21.0" prefWidth="198.0" spacing="10.0">
-                <TextField prefHeight="27.0" prefWidth="81.0"/>
+                <TextField fx:id="max_field" prefHeight="27.0" prefWidth="81.0"/>
                 <Label text="Min"/>
-                <TextField prefHeight="27.0" prefWidth="71.0"/>
+                <TextField fx:id="min_field" prefHeight="27.0" prefWidth="71.0"/>
             </HBox>
         </VBox>
-        <Label text="Add Product" GridPane.columnSpan="3">
+        <Label fx:id="main_label" text="Add Product" GridPane.columnSpan="3">
             <GridPane.margin>
                 <Insets left="20.0"/>
             </GridPane.margin>
@@ -83,25 +84,41 @@
                     </opaqueInsets>
                 </TextField>
             </HBox>
-            <TableView prefHeight="130.0" prefWidth="344.0">
+            <TableView fx:id="all_parts" prefHeight="130.0" prefWidth="344.0">
                 <columns>
-                    <TableColumn prefWidth="45.7601318359375" text="Part ID"/>
-                    <TableColumn prefWidth="73.430908203125" text="Part Name"/>
-                    <TableColumn prefWidth="94.81707763671875" text="Inventory Level"/>
-                    <TableColumn prefWidth="109.68292236328125" text="Price / Cost per Unit"/>
+                    <TableColumn prefWidth="49.6341552734375" text="Part ID">
+                        <cellValueFactory><PropertyValueFactory property="id" /></cellValueFactory>
+                    </TableColumn>
+                    <TableColumn prefWidth="71.96340942382812" text="Part Name">
+                        <cellValueFactory><PropertyValueFactory property="name" /></cellValueFactory>
+                    </TableColumn>
+                    <TableColumn prefWidth="95.54464721679688" text="Inventory Level">
+                        <cellValueFactory><PropertyValueFactory property="stock" /></cellValueFactory>
+                    </TableColumn>
+                    <TableColumn prefWidth="104.0" text="Price/Cost Per Unit">
+                        <cellValueFactory><PropertyValueFactory property="price" /></cellValueFactory>
+                    </TableColumn>
                 </columns>
             </TableView>
             <HBox alignment="CENTER_RIGHT" prefHeight="51.0" prefWidth="323.0">
-                <Button mnemonicParsing="false" text="Add"/>
+                <Button onMouseClicked="#addAssociatedPart" mnemonicParsing="false" text="Add"/>
             </HBox>
         </VBox>
         <VBox prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
-            <TableView prefHeight="138.0" prefWidth="290.0">
+            <TableView fx:id="associated_parts" prefHeight="138.0" prefWidth="290.0">
                 <columns>
-                    <TableColumn prefWidth="49.6341552734375" text="Part ID"/>
-                    <TableColumn prefWidth="71.96340942382812" text="Part Name"/>
-                    <TableColumn prefWidth="95.54464721679688" text="Inventory Level"/>
-                    <TableColumn prefWidth="104.0" text="Price / Cost per Unit"/>
+                    <TableColumn prefWidth="49.6341552734375" text="Part ID">
+                        <cellValueFactory><PropertyValueFactory property="id" /></cellValueFactory>
+                    </TableColumn>
+                    <TableColumn prefWidth="71.96340942382812" text="Part Name">
+                        <cellValueFactory><PropertyValueFactory property="name" /></cellValueFactory>
+                    </TableColumn>
+                    <TableColumn prefWidth="95.54464721679688" text="Inventory Level">
+                        <cellValueFactory><PropertyValueFactory property="stock" /></cellValueFactory>
+                    </TableColumn>
+                    <TableColumn prefWidth="104.0" text="Price/Cost Per Unit">
+                        <cellValueFactory><PropertyValueFactory property="price" /></cellValueFactory>
+                    </TableColumn>
                 </columns>
             </TableView>
             <HBox alignment="CENTER_RIGHT" prefHeight="91.0" prefWidth="323.0">
@@ -109,10 +126,10 @@
                     <Insets top="10.0"/>
                 </padding>
                 <VBox prefHeight="62.0" prefWidth="153.0">
-                    <Button mnemonicParsing="false" text="Remove Associated Part"/>
+                    <Button mnemonicParsing="false" onMouseClicked="#removeAssociatedPart" text="Remove Associated Part"/>
                     <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="40.0">
-                        <Button mnemonicParsing="false" text="Save"/>
-                        <Button mnemonicParsing="false" text="Cancel"/>
+                        <Button fx:id="save_button" mnemonicParsing="false" onMouseClicked="#addProduct" text="Save"/>
+                        <Button mnemonicParsing="false" onMouseClicked="#close" text="Cancel"/>
                     </HBox>
                 </VBox>
             </HBox>

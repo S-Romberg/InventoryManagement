@@ -1,9 +1,11 @@
 package Models;
 
+import Controllers.PartController;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 public class Product {
-    private ObservableList<Part> associatedParts;
+    private ObservableList<Part> associatedParts = FXCollections.observableArrayList();
     private int id;
     private String name;
     private double price;
@@ -20,6 +22,8 @@ public class Product {
         this.max = max;
     }
 
+    public Product(){
+    }
 
     /**
      * @return the id
@@ -114,9 +118,15 @@ public class Product {
 
     /**
      * @param selectedAssociatedPart the associated part to delete
+     * @return True if associated part was deleted
      */
     public boolean deleteAssociatedPart(Part selectedAssociatedPart) {
-        return true;
+        try {
+            return associatedParts.remove(selectedAssociatedPart);
+        } catch (Exception e){
+            PartController.throwAlert("Error removing part", e.getLocalizedMessage());
+            return false;
+        }
     }
 
     /**

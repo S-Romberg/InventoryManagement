@@ -4,6 +4,7 @@ import Models.Outsourced;
 import Models.Part;
 import Models.Product;
 import com.sun.jdi.event.ExceptionEvent;
+import com.sun.webkit.WebPage;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableArrayBase;
@@ -15,8 +16,11 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.web.WebEngine;
+import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 
+import java.lang.reflect.Field;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -41,35 +45,14 @@ public class Inventory extends Application {
     public Inventory() {}
 
     public void initialize () {
-        part_table.setItems(filteredParts);
-        product_table.setItems(filteredProducts);
-
-        Predicate<Part> partSearch = e -> String.valueOf(e.getId()).contains(search_part.getText()) || e.getName().contains(search_part.getText());
-        Predicate<Product> productSearch = e -> String.valueOf(e.getId()).contains(search_product.getText()) || e.getName().contains(search_product.getText());
-
-        search_part.textProperty().addListener(obs-> {
-            String filter = search_part.getText();
-            if(filter == null || filter.length() == 0) {
-                filteredParts.setPredicate(s -> true);
-            } else {
-                filteredParts.setPredicate(partSearch);
-            }
-        });
-        search_product.textProperty().addListener(obs-> {
-            String filter = search_part.getText();
-            if(filter == null || filter.length() == 0) {
-                filteredProducts.setPredicate(s -> true);
-            }else {
-                filteredProducts.setPredicate(productSearch);
-            }
-        });
+        initializeSearch();
     }
 
 
     @Override
     public void start(Stage mainStage) throws Exception{
         Parent root =  FXMLLoader.load(getClass().getResource("../Views/inventory.fxml"));
-        new InHouse(1, "part", 1.0, 1,1,2,12);
+        // new InHouse(1, "part", 1.0, 1,1,2,12);
         mainStage.setTitle("Inventory Management System");
         mainStage.setScene(new Scene(root));
         mainStage.show();
@@ -77,6 +60,46 @@ public class Inventory extends Application {
 
     public static void main(String[] args) {
         launch(args);
+    }
+
+    public void initializeSearch(){
+        part_table.setItems(filteredParts);
+        product_table.setItems(filteredProducts);
+
+        search_part.textProperty().addListener(obs-> {
+            Predicate<Part> partSearch = e -> String.valueOf(e.getId()).contains(search_part.getText()) || e.getName().contains(search_part.getText());
+            String filter = search_part.getText();
+            if(filter == null || filter.length() == 0) {
+                filteredParts.setPredicate(s -> true);
+            } else {
+                filteredParts.setPredicate(partSearch);
+//                highlightText(filter);
+            }
+        });
+        search_product.textProperty().addListener(obs-> {
+            Predicate<Product> productSearch = e -> String.valueOf(e.getId()).contains(search_product.getText()) || e.getName().contains(search_product.getText());
+            String filter = search_product.getText();
+            if(filter == null || filter.length() == 0) {
+                filteredProducts.setPredicate(s -> true);
+            } else {
+                filteredProducts.setPredicate(productSearch);
+//                highlightText(filter);
+            }
+        });
+
+
+    }
+
+    public void highlightText(String query){
+        WebView webView = new WebView();
+        WebEngine engine = webView.getEngine();
+        try {
+            Field pageField = engine.getClass().getDeclaredField("page");
+            pageField.setAccessible(true);
+
+            WebPage page = (com.sun.webkit.WebPage) pageField.get(engine);
+            page.find(query, true, true, false);
+        } catch(Exception e) { /* log error could not access page */ }
     }
 
     public static void printList(){
@@ -168,33 +191,23 @@ public class Inventory extends Application {
 
     /**
      * @param index Index of Part in allParts observableArray
-     * @param inHouse True if class is Inhouse, false if class is Outsourced
-     * @param id Part ID from modified part
-     * @param max Part max from form
-     * @param min Part min from form
-     * @param price Part price from form
-     * @param stock Part stock from form
-     * @param name Part name from form
-     * @param additionalField Either InHouse MachineId from form or Outsourced CompanyName from form
+     * @param selectedPart Part to updated
      */
-
-     // + updatePart(index:int, selectedPart:Part):void
-    public static void updatePart(int index, boolean inHouse, int id, int max, int min, double price, int stock, String name, String additionalField) {
-        Part modifiedPart;
-        if (inHouse) {
-            modifiedPart = new InHouse(id, name, price, stock, min, max, Integer.parseInt(additionalField));
-        } else {
-            modifiedPart = new Outsourced(id, name, price, stock, min, max, additionalField);
-        }
-        allParts.set(index, modifiedPart);
+    public static void updatePart(int index, Part selectedPart){
+        allParts.set(index, selectedPart);
     }
 
     /**
      * @return True if part is deleted, false if not
      */
     public boolean deletePart() {
-        System.out.println("delete");
-        return true;
+        try {
+            Part part = part_table.getSelectionModel().getSelectedItem();
+            return allParts.remove(part);
+        } catch (Exception e){
+            PartController.throwAlert("Error deleting part", e.getLocalizedMessage());
+            return false;
+        }
     }
 
     /**
@@ -215,20 +228,28 @@ public class Inventory extends Application {
     public void modifyProduct() throws Exception {
         Product product = product_table.getSelectionModel().getSelectedItem();
         if (product == null) { PartController.throwAlert("Error: No selected product", "Must select product to modify"); return; }
+        ProductController.setModifiedProduct(product);
         Parent addPartPage = FXMLLoader.load(getClass().getResource("../Views/product_form.fxml"));
         Stage stage = new Stage();
         stage.setScene(new Scene(addPartPage));
         stage.show();
     }
 
-    //+ updateProduct(index:int, newProduct:Product):void
+    public static void updateProduct(int index, Product newProduct) {
+        allProducts.set(index, newProduct);
+    }
 
     /**
      * @return True if product is deleted, false if not
      */
     public boolean deleteProduct() {
-        System.out.println("delete");
-        return true;
+        try {
+            Product product = product_table.getSelectionModel().getSelectedItem();
+            return allProducts.remove(product);
+        } catch (Exception e){
+            PartController.throwAlert("Error deleting product", e.getLocalizedMessage());
+            return false;
+        }
     }
 
     public void exitApplication() {

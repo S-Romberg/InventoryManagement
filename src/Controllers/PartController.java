@@ -93,22 +93,6 @@ public class PartController {
         selectedPart = part;
     }
 
-    public void modifyPart() {
-        name = name_field.getText();
-        price = Double.parseDouble(price_field.getText());
-        stock = Integer.parseInt(inv_field.getText());
-        min = Integer.parseInt(min_field.getText());
-        max = Integer.parseInt(max_field.getText());
-        additionalField = additional_part_field.getText();
-        String inStockErrors = validStockNumber(stock, min, max);
-        if (!inStockErrors.equals("")) {throwAlert("In Stock Error", inStockErrors); return; }
-        int machineId = Integer.parseInt(additionalField);
-        boolean inHouse = selectedPart instanceof InHouse;
-        int index = Inventory.getAllParts().indexOf(selectedPart);
-        Inventory.updatePart(index, inHouse, selectedPart.getId(), max, min, price, stock, name, additionalField);
-        close();
-    }
-
     public void addPart() {
         Part newPart;
         if (emptyFormFields()) { throwAlert("Form Error", "Fill out all required fields"); return; }
@@ -137,6 +121,28 @@ public class PartController {
         }
     }
 
+    public void modifyPart() {
+        name = name_field.getText();
+        price = Double.parseDouble(price_field.getText());
+        stock = Integer.parseInt(inv_field.getText());
+        min = Integer.parseInt(min_field.getText());
+        max = Integer.parseInt(max_field.getText());
+        additionalField = additional_part_field.getText();
+        String inStockErrors = validStockNumber(stock, min, max);
+        if (!inStockErrors.equals("")) {throwAlert("In Stock Error", inStockErrors); return; }
+        int machineId = Integer.parseInt(additionalField);
+        boolean inHouse = selectedPart instanceof InHouse;
+        int index = Inventory.getAllParts().indexOf(selectedPart);
+        Part modifiedPart;
+        if (inHouse) {
+            modifiedPart = new InHouse(selectedPart.getId(), name, price, stock, min, max, Integer.parseInt(additionalField));
+        } else {
+            modifiedPart = new Outsourced(selectedPart.getId(), name, price, stock, min, max, additionalField);
+        }
+        Inventory.updatePart(index, modifiedPart);
+        close();
+    }
+
     /**
      * @param mainText Main text to display in alert
      * @param detail Detail text to display in alert
@@ -153,6 +159,7 @@ public class PartController {
      * @param stock Stock number from form
      * @param min Min number from form
      * @param max Max number from form
+     * @return True if all stock-related numbers from form (inv, min, max) are valid
      */
     public static String validStockNumber(int stock, int min, int max) {
         if (min > max) {
