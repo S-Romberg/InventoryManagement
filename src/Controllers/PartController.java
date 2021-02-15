@@ -66,7 +66,6 @@ public class PartController {
             price_field.clear();
             additional_part_field.clear();
             main_label.setText("Add Part");
-            Inventory.printList();
         }
     };
 

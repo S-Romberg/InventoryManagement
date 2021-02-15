@@ -1,12 +1,9 @@
 package Controllers;
 
-import Models.InHouse;
-import Models.Outsourced;
 import Models.Product;
 import Models.Part;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 
 public class ProductController {
@@ -49,9 +46,12 @@ public class ProductController {
             max_field.clear();
             price_field.clear();
             main_label.setText("Add Product");
-            Inventory.printList();
         }
     };
+
+    /**
+     * @param product Product that is being modified
+     */
 
     public static void setModifiedProduct(Product product){
         modifiedProduct = product;
@@ -67,7 +67,9 @@ public class ProductController {
     public void removeAssociatedPart(){
         Part selected_part = associated_parts.getSelectionModel().getSelectedItem();
         if (selected_part == null) { PartController.throwAlert("Error: No selected part", "Must select part to remove"); return; }
-        newProduct.deleteAssociatedPart(selected_part);
+        if(Inventory.confirmationAlert("Are you sure you want to remove this part?")) {
+            newProduct.deleteAssociatedPart(selected_part);
+        }
     }
 
     public void addProduct() {

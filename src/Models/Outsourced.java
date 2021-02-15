@@ -7,10 +7,16 @@ public class Outsourced extends Part{
         companyName = initCompanyName;
     }
 
+    /**
+     * @return the company name
+     */
     public String getCompanyName(){
         return companyName;
     }
 
+    /**
+     * @param name the company name to set
+     */
     public void setCompanyName(String name){
         companyName = name;
     }

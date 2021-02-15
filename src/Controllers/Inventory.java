@@ -1,28 +1,22 @@
 package Controllers;
-import Models.InHouse;
-import Models.Outsourced;
 import Models.Part;
 import Models.Product;
-import com.sun.jdi.event.ExceptionEvent;
-import com.sun.webkit.WebPage;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableArrayBase;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
-import javafx.scene.web.WebEngine;
-import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 
-import java.lang.reflect.Field;
+import java.util.Optional;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 public class Inventory extends Application {
 
@@ -52,7 +46,6 @@ public class Inventory extends Application {
     @Override
     public void start(Stage mainStage) throws Exception{
         Parent root =  FXMLLoader.load(getClass().getResource("../Views/inventory.fxml"));
-        // new InHouse(1, "part", 1.0, 1,1,2,12);
         mainStage.setTitle("Inventory Management System");
         mainStage.setScene(new Scene(root));
         mainStage.show();
@@ -73,7 +66,6 @@ public class Inventory extends Application {
                 filteredParts.setPredicate(s -> true);
             } else {
                 filteredParts.setPredicate(partSearch);
-//                highlightText(filter);
             }
         });
         search_product.textProperty().addListener(obs-> {
@@ -83,27 +75,10 @@ public class Inventory extends Application {
                 filteredProducts.setPredicate(s -> true);
             } else {
                 filteredProducts.setPredicate(productSearch);
-//                highlightText(filter);
             }
         });
 
 
-    }
-
-    public void highlightText(String query){
-        WebView webView = new WebView();
-        WebEngine engine = webView.getEngine();
-        try {
-            Field pageField = engine.getClass().getDeclaredField("page");
-            pageField.setAccessible(true);
-
-            WebPage page = (com.sun.webkit.WebPage) pageField.get(engine);
-            page.find(query, true, true, false);
-        } catch(Exception e) { /* log error could not access page */ }
-    }
-
-    public static void printList(){
-        allParts.forEach((part) -> System.out.println("Name:  " + part.getName()));
     }
 
     /**
@@ -182,8 +157,6 @@ public class Inventory extends Application {
         if (part == null) { PartController.throwAlert("Error: No selected part", "Must select part to modify"); return; }
         Parent addPartPage = FXMLLoader.load(getClass().getResource("../Views/part_form.fxml"));
         Stage stage = new Stage();
-        System.out.println("Modify Part");
-        System.out.println(part);
         stage.setScene(new Scene(addPartPage));
         stage.show();
     }
@@ -202,8 +175,10 @@ public class Inventory extends Application {
      */
     public boolean deletePart() {
         try {
-            Part part = part_table.getSelectionModel().getSelectedItem();
-            return allParts.remove(part);
+            if(confirmationAlert("Are you sure you want to delete this part?")) {
+                Part part = part_table.getSelectionModel().getSelectedItem();
+                return allParts.remove(part);
+            } return false;
         } catch (Exception e){
             PartController.throwAlert("Error deleting part", e.getLocalizedMessage());
             return false;
@@ -244,12 +219,26 @@ public class Inventory extends Application {
      */
     public boolean deleteProduct() {
         try {
-            Product product = product_table.getSelectionModel().getSelectedItem();
-            return allProducts.remove(product);
+            if(confirmationAlert("Are you sure you want to delete this product?")) {
+                Product product = product_table.getSelectionModel().getSelectedItem();
+                return allProducts.remove(product);
+            } return false;
         } catch (Exception e){
             PartController.throwAlert("Error deleting product", e.getLocalizedMessage());
             return false;
         }
+    }
+
+    /**
+     * @param mainText Text to display in confirmation alert body
+     * @return boolean True if user confirmed
+     */
+    public static boolean confirmationAlert(String mainText){
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Confirm");
+        alert.setHeaderText(mainText);
+        Optional<ButtonType> result = alert.showAndWait();
+        return (result.get() == ButtonType.OK);
     }
 
     public void exitApplication() {
