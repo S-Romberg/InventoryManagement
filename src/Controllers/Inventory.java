@@ -38,11 +38,17 @@ public class Inventory extends Application {
 
     public Inventory() {}
 
+    /**
+     * initializes search fields for products and parts
+    */
     public void initialize () {
         initializeSearch();
     }
 
 
+    /**
+     * starts main page for application
+     */
     @Override
     public void start(Stage mainStage) throws Exception{
         Parent root =  FXMLLoader.load(getClass().getResource("../Views/inventory.fxml"));
@@ -51,10 +57,28 @@ public class Inventory extends Application {
         mainStage.show();
     }
 
+    /**
+     *
+     * RUNTIME ERROR: During development on the search functionality I had introduced a bug where it would only filter
+     * off of the first letter in the search field. I fixed this by moving the Predicate declarations inside of the
+     * addListener method on the search fields.
+     *
+     * FUTURE ENHANCEMENT: In the future I would add a `type` property to the Parts class so that the user could filter
+     * off of that property. I would also add a database so the data would persist.
+     * off of that property. I would also add a database so the data would persist.
+     *
+     * JAVADOC: located in /InventoryManagement/javadoc
+     *
+     * @param args main args
+     */
+
     public static void main(String[] args) {
         launch(args);
     }
 
+    /**
+     * initializes search fields for products and parts
+     */
     public void initializeSearch(){
         part_table.setItems(filteredParts);
         product_table.setItems(filteredProducts);
@@ -77,8 +101,6 @@ public class Inventory extends Application {
                 filteredProducts.setPredicate(productSearch);
             }
         });
-
-
     }
 
     /**
@@ -143,6 +165,9 @@ public class Inventory extends Application {
         allParts.add(newPart);
     }
 
+    /**
+     * creates add part scene
+     */
     public void addPart() throws Exception {
         PartController.setSelectedPart(null);
         Parent addPartPage = FXMLLoader.load(getClass().getResource("../Views/part_form.fxml"));
@@ -151,6 +176,9 @@ public class Inventory extends Application {
         stage.show();
     }
 
+    /**
+     * creates modify part scene, passes selected part to partController
+     */
     public void modifyPart() throws Exception {
         Part part = part_table.getSelectionModel().getSelectedItem();
         PartController.setSelectedPart(part);
@@ -177,12 +205,21 @@ public class Inventory extends Application {
         try {
             if(confirmationAlert("Are you sure you want to delete this part?")) {
                 Part part = part_table.getSelectionModel().getSelectedItem();
-                return allParts.remove(part);
+                if (part == null) { PartController.throwAlert("Error: No selected part", "Must select part to delete"); return false; }
+                return deletePart(part);
             } return false;
         } catch (Exception e){
             PartController.throwAlert("Error deleting part", e.getLocalizedMessage());
             return false;
         }
+    }
+
+    /**
+     * @param selectedPart part to be deleted
+     * @return True if part is deleted, false if not
+     */
+    public boolean deletePart(Part selectedPart) {
+        return allParts.remove(selectedPart);
     }
 
     /**
@@ -192,14 +229,20 @@ public class Inventory extends Application {
         allProducts.add(newProduct);
     }
 
-
+    /**
+     * creates add product scene
+     */
     public void addProduct() throws Exception {
+        ProductController.setModifiedProduct(null);
         Parent addPartPage = FXMLLoader.load(getClass().getResource("../Views/product_form.fxml"));
         Stage stage = new Stage();
         stage.setScene(new Scene(addPartPage));
         stage.show();
     }
 
+    /**
+     * creates modify product scene, passes selected product to productController
+     */
     public void modifyProduct() throws Exception {
         Product product = product_table.getSelectionModel().getSelectedItem();
         if (product == null) { PartController.throwAlert("Error: No selected product", "Must select product to modify"); return; }
@@ -210,6 +253,10 @@ public class Inventory extends Application {
         stage.show();
     }
 
+    /**
+     * @param index index of product to be updated
+     * @param newProduct new product that will replace old product existing at index
+     */
     public static void updateProduct(int index, Product newProduct) {
         allProducts.set(index, newProduct);
     }
@@ -221,12 +268,22 @@ public class Inventory extends Application {
         try {
             if(confirmationAlert("Are you sure you want to delete this product?")) {
                 Product product = product_table.getSelectionModel().getSelectedItem();
-                return allProducts.remove(product);
+                if (product == null) { PartController.throwAlert("Error: No selected product", "Must select product to delete"); return false; }
+                if (product.getAllAssociatedParts().size() >= 1){  PartController.throwAlert("Error deleting product", "Cannot delete product with attached parts"); return false;  }
+                return deleteProduct(product);
             } return false;
         } catch (Exception e){
             PartController.throwAlert("Error deleting product", e.getLocalizedMessage());
             return false;
         }
+    }
+
+    /**
+     * @param selectedProduct product to be deleted
+     * @return True if product is deleted, false if not
+     */
+    public boolean deleteProduct(Product selectedProduct) {
+        return allProducts.remove(selectedProduct);
     }
 
     /**
@@ -241,6 +298,9 @@ public class Inventory extends Application {
         return (result.get() == ButtonType.OK);
     }
 
+    /**
+     * closes scene
+     */
     public void exitApplication() {
         Stage stage = (Stage) part_table.getScene().getWindow();
         stage.close();

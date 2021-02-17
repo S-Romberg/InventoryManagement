@@ -41,6 +41,9 @@ public class PartController {
     private boolean inHouse = true;
     private static Part selectedPart;
 
+    /**
+     * Initializes values and fields
+     */
     public void initialize() {
         if(selectedPart != null) {
             name_field.setText(selectedPart.getName());
@@ -69,17 +72,25 @@ public class PartController {
         }
     };
 
-
+    /**
+     * updates variable inHouse to true, sets text to machine id
+     */
     public void updateToInHouse() {
         inHouse = true;
         additional_part_label.setText("Machine ID");
     }
 
+    /**
+     * updates variable inHouse to false,  sets text to company name
+     */
     public void updateToOutsourced() {
         inHouse = false;
         additional_part_label.setText("Company Name");
     }
 
+    /**
+     * closes scene
+     */
     public void close() {
         Stage stage = (Stage) additional_part_field.getScene().getWindow();
         stage.close();
@@ -92,6 +103,10 @@ public class PartController {
         selectedPart = part;
     }
 
+
+    /**
+     * creates part and passes created part to Inventory.addPart
+     */
     public void addPart() {
         Part newPart;
         if (emptyFormFields()) { throwAlert("Form Error", "Fill out all required fields"); return; }
@@ -120,26 +135,35 @@ public class PartController {
         }
     }
 
+    /**
+     * creates part and passes created part and index to Inventory.updatePart
+     */
     public void modifyPart() {
-        name = name_field.getText();
-        price = Double.parseDouble(price_field.getText());
-        stock = Integer.parseInt(inv_field.getText());
-        min = Integer.parseInt(min_field.getText());
-        max = Integer.parseInt(max_field.getText());
-        additionalField = additional_part_field.getText();
-        String inStockErrors = validStockNumber(stock, min, max);
-        if (!inStockErrors.equals("")) {throwAlert("In Stock Error", inStockErrors); return; }
-        int machineId = Integer.parseInt(additionalField);
-        boolean inHouse = selectedPart instanceof InHouse;
-        int index = Inventory.getAllParts().indexOf(selectedPart);
-        Part modifiedPart;
-        if (inHouse) {
-            modifiedPart = new InHouse(selectedPart.getId(), name, price, stock, min, max, Integer.parseInt(additionalField));
-        } else {
-            modifiedPart = new Outsourced(selectedPart.getId(), name, price, stock, min, max, additionalField);
+        if (emptyFormFields()) { throwAlert("Form Error", "Fill out all required fields"); return; }
+        try {
+            name = name_field.getText();
+            price = Double.parseDouble(price_field.getText());
+            stock = Integer.parseInt(inv_field.getText());
+            min = Integer.parseInt(min_field.getText());
+            max = Integer.parseInt(max_field.getText());
+            additionalField = additional_part_field.getText();
+            String inStockErrors = validStockNumber(stock, min, max);
+            if (!inStockErrors.equals("")) {throwAlert("In Stock Error", inStockErrors); return; }
+            boolean inHouse = selectedPart instanceof InHouse;
+            int index = Inventory.getAllParts().indexOf(selectedPart);
+            Part modifiedPart;
+            if (inHouse) {
+                modifiedPart = new InHouse(selectedPart.getId(), name, price, stock, min, max, Integer.parseInt(additionalField));
+            } else {
+                modifiedPart = new Outsourced(selectedPart.getId(), name, price, stock, min, max, additionalField);
+            }
+            Inventory.updatePart(index, modifiedPart);
+            close();
+        } catch (NumberFormatException e){
+            throwAlert("Error modifying part", "Entered invalid number");
+        } catch (Exception e){
+            throwAlert("Error modifying part", e.getLocalizedMessage());
         }
-        Inventory.updatePart(index, modifiedPart);
-        close();
     }
 
     /**
